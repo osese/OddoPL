@@ -1,0 +1,14 @@
+yordam üstü(a, b) 
+	total = 1;
+	
+	iken  b > 0  yap
+			 total *= a 
+	 son 
+	dön total ;
+son 
+
+
+yordam topla(a, b)
+	a = 2 ;	
+	dön a ;
+son		
