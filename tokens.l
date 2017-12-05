@@ -34,13 +34,13 @@ sinif										{ return SINIF;	}
 tür											{ return TUR; 	}
 cins 										{ return CINS; 	}
 yazdir										{ return YAZDIR; }
-doðru										{ yylval.ival = 1; return DOGRU; }
-yanlýþ										{ yylval.ival = 0; return YANLIS; }
-{H}({H}|{R})*								{ yylval.sval = yytext; return TANIMLAYICI; }
-{R}+										{ yylval.ival = atol(yytext); return TAMSAYI; }
-{R}*\.{R}+									{ yylval.dval = atof(yytext); return ONDALIK;	}
-'(\\.|[^\\'])+'								{ yylval.sval = strdup(yytext); return DIZGI; }
-\"(\\.|[^\\"])*\"							{ yylval.sval = strdup(yytext); return DIZGI;	}
+doðru										{ yylval.val = value_t_create(V_BOOL, "1"); return DOGRU; }
+yanlýþ										{ yylval.val = value_t_create(V_BOOL, "0"); return YANLIS; }
+{H}({H}|{R})*								{ yylval.ident = yytext; return TANIMLAYICI; }
+{R}+										{ yylval.val = value_t_create(V_INT, yytext); return TAMSAYI; }
+{R}*\.{R}+									{ yylval.val = value_t_create(V_DOUBLE, yytext); return ONDALIK;	}
+'(\\.|[^\\'])+'								{ yylval.val = value_t_create(V_STR, yytext); return DIZGI; }
+\"(\\.|[^\\"])*\"							{ yylval.val = value_t_create(V_STR, yytext); return DIZGI;	}
 "+="										{ return ARTIESIT; }
 "-="										{ return EKSIESIT; }
 "*="										{ return CARPIESIT; }

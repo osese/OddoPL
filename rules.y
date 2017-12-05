@@ -2,23 +2,19 @@
 
 #include<stdio.h>
 #include "tree.h"
-
+#include "codegen.h"
+#include "symtable.h"
+#include "stackmachine.h"
 
 %}
+%define api.value.type {Value_t}
 
-%union{
-	long 	ival;
-	double  dval;
-	char* 	sval;
-};
-
-
-%token<ival> TAMSAYI
-%token<dval> ONDALIK
-%token<sval> DIZGI
-%token<sval> TANIMLAYICI
-%token<lval> DOGRU
-%token<lval> YANLIS
+%token TAMSAYI
+%token ONDALIK
+%token DIZGI
+%token TANIMLAYICI
+%token DOGRU
+%token YANLIS
 
 %token ISE YEREL YAP SON BASKA YINELE EKADAR IKEN UZRE DON DEVAM BIRAK 
 %token SAGKAYDIR SOLKAYDIR VE VEYA YS
@@ -76,49 +72,49 @@ fonk_cagri
 					;
 
 atom				 
-					: DIZGI				{ install($1); }											
-					| TAMSAYI			{ install($1); }
-					| ONDALIK			{ install($1); }
-					| DOGRU
-					| YANLIS
+					: DIZGI				{ setup_var($1); }											
+					| TAMSAYI			{ setup_var($1); }
+					| ONDALIK			{ setup_var($1); }
+					| DOGRU				{ setup_var($1); }
+					| YANLIS			{ setup_var($1); }
 					| fonk_cagri		 
-					| solsal_ifade				
+					| solsal_ifade		{ setup_var($1); }		
 					;
 
 solsal_ifade
-					:	TANIMLAYICI 									
-					| YEREL TANIMLAYICI 
-					| solsal_ifade '[' ifade ']' 
+					: TANIMLAYICI 													
+					| YEREL TANIMLAYICI 			{ $$ = $2; }
+					| solsal_ifade '[' ifade ']' 	
 					| solsal_ifade '.' TANIMLAYICI 
 					;
 
 
 atama_ifadesi
-					: solsal_ifade '=' ifade 				  		
-					| solsal_ifade '=' liste_ifadesi
-					| solsal_ifade ARTIESIT ifade
-					| solsal_ifade EKSIESIT ifade	
-					| solsal_ifade BOLUESIT ifade 
-					| solsal_ifade CARPIESIT ifade
-					| solsal_ifade MODESIT ifade
+					: solsal_ifade '=' ifade 			{ codegen(o_MOV, $1, $3); }			  		
+					| solsal_ifade '=' liste_ifadesi	
+					| solsal_ifade ARTIESIT ifade		{ codegen(op_ADD_E, $1, $3); }
+					| solsal_ifade EKSIESIT ifade		{ codegen(op_SUB_E, $1, $3); }
+					| solsal_ifade BOLUESIT ifade 		{ codegen(o_DIV_E, $1, $3); }
+					| solsal_ifade CARPIESIT ifade		{ codegen(op_MUL_E, $1, $3); }
+					| solsal_ifade MODESIT ifade		{ codegen(op_MOD_E, $1, $3); }
 					;
 
-ifade				: atom
-					| ifade '+' ifade 
-					| ifade '-' ifade
-					| ifade '/' ifade 
-					| ifade '*' ifade
-					| '-' ifade   	
-					| ifade '>' ifade
-					| ifade '<' ifade
-					| ifade BIRLESTIR ifade
-					| ifade KE ifade 
-					| ifade BE ifade
-					| ifade EE ifade
-					| ifade ED ifade 
-					| ifade VE ifade
-					| ifade VEYA ifade
-					| '(' ifade ')'
+ifade				: atom								{ $$ = $1; } 	
+					| ifade '+' ifade 					{ codegen(op_ADD, $1, $3); }
+					| ifade '-' ifade					{ codegen(op_SUB, $1, $3); }
+					| ifade '/' ifade 					{ codegen(op_DIV, $1, $3); }
+					| ifade '*' ifade					{ codegen(op_MUL, $1, $3); }
+					| '-' ifade   						{ codegen(op_UMINUS, $1, $3); }
+					| ifade '>' ifade					{ codegen(op_BT, $1, $3); }
+					| ifade '<' ifade					{ codegen(op_LT, $1, $3); }
+					| ifade BIRLESTIR ifade				{ codegen(op_CONCAT, $1, $3); }
+					| ifade KE ifade 					{ codegen(op_LE, $1, $3); }
+					| ifade BE ifade					{ codegen(op_GE, $1, $3); }
+					| ifade EE ifade					{ codegen(op_EE, $1, $3); }
+					| ifade ED ifade 					{ codegen(op_NE, $1, $3); }
+					| ifade VE ifade					{ codegen(op_AND, $1, $3); }
+					| ifade VEYA ifade					{ codegen(op_OR, $1, $3); }
+					| '(' ifade ')'						{ $$ = $2; }
 					;
 
 
@@ -172,11 +168,13 @@ int main(int argc, char* argv[]){
 			yyset_in(f);
 			yyparse();	
 			fclose(f);
-			return 1;
+			
+			return fetch_execute_cycle();
 		}else{
 			fprintf(stderr, "File can't open!\n"); 
 			return -1;
 		}
 	}
-	return yyparse();
+	yyparse();
+	return print_eval_loop();
 }
