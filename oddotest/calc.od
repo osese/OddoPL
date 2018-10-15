@@ -1,0 +1,8 @@
+yazdir(3 + 5)
+yerel a = 2
+yazdir(a)
+yazdir(a + 2)
+yerel b = 3
+yerel c = 12
+yazdir(c + a - 12)
+yazdir(a + b + c)

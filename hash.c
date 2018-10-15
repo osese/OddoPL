@@ -1,11 +1,11 @@
-#include "hash.h"
+#include "./include/hash.h"
 #include <string.h>
 
 unsigned HashSBox(const char*, int);
 
 unsigned
 hash(const char* s){
-	return HashSBox(s, strlen(s))%14950;
+	return HashSBox(s, strlen(s))%250;
 }
 
 
@@ -54,4 +54,3 @@ unsigned HashSBox (const char *str, int len) {
     }
     return hash;
 }
-

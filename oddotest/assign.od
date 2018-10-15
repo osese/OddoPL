@@ -1,0 +1,3 @@
+yerel a = 2 + 3 + 3
+a = a + 1 
+yazdir(a)

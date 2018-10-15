@@ -1,14 +1,14 @@
-yordam üstü(a, b) 
+yordam ustu(a, b)
 	total = 1;
-	
+
 	iken  b > 0  yap
-			 total *= a 
-	 son 
-	dön total ;
-son 
+			 total *= a
+	 son
+	dÃ¶n total ;
+son
 
 
 yordam topla(a, b)
-	a = 2 ;	
-	dön a ;
-son		
+	a = 2 ;
+	dÃ¶n a ;
+son

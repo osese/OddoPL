@@ -1,7 +1,7 @@
 a = 2;
 b = 3;
 ise a < b yap
-	a = a + 1
+	a = a + 12
 son
 
 ise b < a yap 
