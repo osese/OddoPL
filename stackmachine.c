@@ -4,10 +4,8 @@
 #include "include/symboltable.h"
 #include <assert.h>
 #define DEBUG
-#define sorv_get(v1)	\
-				if(v_isident(v1)){\
-					v1 = sym_get(v_gident(v1));\
-				}
+
+#define sm_add(x,y) \
 
 void push_stack(Value_t var){
 	var->pos = top;
@@ -119,15 +117,27 @@ int fetch_execute_cycle(){
 		switch(a.op){
 			case op_LOAD:
 				;
-				a.ar1->pos = top;
-				push_stack(sym_get(v_gstr(a.ar1)));
+				
+				stack[++top] = sym_get(v_gstr(a.ar1));
 				break;
 			case op_STORE:
 				;
 				sym_put(v_gident(a.ar1), NONE);
 				break;
 			case op_PUSH:
-				push_stack(a.ar1);
+				stack[++top] = a.ar1;
+				break;
+			case op_MOD:
+				;
+				v1 = stack[top-1];
+				v2 = stack[top];
+				stack[--top] = value_t_mod(v1, v2);
+				break;
+			case op_EE: 
+				;
+				v1 = stack[top-1];
+				v2 = stack[top];
+				stack[--top] = value_t_ee(v1, v2);
 				break;
 			case op_JMP:
 				#ifdef DEBUG 
@@ -138,48 +148,34 @@ int fetch_execute_cycle(){
 				if(v_gint(stack[top]) == 0){
 					pc = a.ar1->label.l1 - 1;
 				}
+				top--;
 				break;
 			case op_ADD:
 				;
 				v1 = stack[top-1];
 				v2 = stack[top];
-				sorv_get(v1);
-				sorv_get(v2);
-				push_stack(value_t_add(v1, v2));
+				stack[top-1] = value_t_add(v1, v2);
+				top = top - 1;
 				break;
 			case op_ASSIGN:
 				;
 				sym_put(v_gident(a.ar1), stack[top]);
+				top--;
 				break;
 
 			case op_GOTO:
 				;
-				pc = a.ar1->label.l2;
+				pc = a.ar1->label.l2-1;
 				break;
 			case op_SUB:
 				;
-				#ifdef DEBUG
-					assert(v1 != NULL);
-					assert(v2 != NULL);
-					assert(v1->type != V_STR);
-					assert(v2->type != V_STR);
-				#endif 
 				v1 = stack[top-1];
 				v2 = stack[top];
-				if(v_isident(v1)){
-					v1 = sym_get(v_gident(v1));
-				}
-				if(v_isident(v2)){
-					v2 = sym_get(v_gident(v2));
-				}
-				push_stack(value_t_sub(v1, v2));
+				stack[top-1] = value_t_sub(v1, v2);
+				top = top - 1;
 				break;
 			case op_PRNT:
-				if(v_isident(stack[top])){
-					value_t_display(sym_get(stack[top]->sval));
-				}else {
-					value_t_display(stack[top]);
-				}
+				value_t_display(stack[top--]); // toptaki elemana ne olacak. 
 				break;
 			case op_HALT:
 				//clear stack ..
@@ -188,17 +184,13 @@ int fetch_execute_cycle(){
 				;
 				v1 = stack[top-1];
 				v2 = stack[top];
-				sorv_get(v1);
-				sorv_get(v2);
-				push_stack(value_t_l(v1, v2));
+				stack[--top] = value_t_l(v1, v2);
 				break;
 			case op_GT:
 				;
 				v1 = stack[top-1];
 				v2 = stack[top];
-				sorv_get(v1);
-				sorv_get(v2);
-				push_stack(value_t_g(v1, v2));
+				stack[--top] = value_t_g(v1, v2);
 				break;
 			default: 
 				assert("Hey wtf!! ");
@@ -207,4 +199,5 @@ int fetch_execute_cycle(){
 		//value_t_display(stack[top]);
 		pc++;
 	}while(a.op != op_HALT);
+	assert(1 == 1);
 }

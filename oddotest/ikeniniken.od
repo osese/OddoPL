@@ -1,0 +1,15 @@
+
+a = 0
+b = 0 
+
+iken a < 4 yap 
+    b = 0
+    iken b < 4 yap 
+        yazdir(b)
+        yazdir("\t")
+        b = b + 1
+    son 
+    a = a + 1
+    yazdir("\n")
+son 
+

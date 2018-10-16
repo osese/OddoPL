@@ -89,8 +89,8 @@ atom
 					;
 
 solsal_ifade
-					: TANIMLAYICI					{ $$ = $1;  }	
-					| YEREL TANIMLAYICI 			{ $$ = $2;  }	
+					: TANIMLAYICI					{ $$ = $1; }	
+					| YEREL TANIMLAYICI 			{ $$ = $2; }	
 					| solsal_ifade '[' ifade ']'
 					| solsal_ifade '.' TANIMLAYICI
 					;
@@ -103,7 +103,7 @@ atama_ifadesi
 					| solsal_ifade EKSIESIT ifade		{ gencode(op_SUB_E, $1, $3); }
 					| solsal_ifade BOLUESIT ifade 		{ gencode(op_DIV_E, $1, $3); }
 					| solsal_ifade CARPIESIT ifade		{ gencode(op_MUL_E, $1, $3); }
-					| solsal_ifade MODESIT ifade			{ gencode(op_MOD_E, $1, $3); }
+					| solsal_ifade MODESIT ifade		{ gencode(op_MOD_E, $1, $3); }
 					;
 
 ifade				: atom								{ $$ = $1; }
@@ -113,6 +113,7 @@ ifade				: atom								{ $$ = $1; }
 					| ifade '*' ifade				{ gencode(op_MUL, $1, $3); }
 					| ifade '>' ifade				{ gencode(op_GT, $1, $3); }
 					| ifade '<' ifade				{ gencode(op_LT, $1, $3); }
+					| ifade '%' ifade 				{ gencode(op_MOD, $1, $3); }
 					| ifade BIRLESTIR ifade	{ gencode(op_CONCAT, $1, $3); }
 					| ifade KE ifade 				{ gencode(op_LE, $1, $3); }
 					| ifade BE ifade				{ gencode(op_GE, $1, $3); }

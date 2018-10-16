@@ -31,7 +31,8 @@ enum opcode{
 	op_JMP,
 	op_LOAD,
 	op_STORE,
-	op_GOTO
+	op_GOTO,
+
 };
 
 struct instruction{

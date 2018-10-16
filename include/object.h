@@ -43,6 +43,7 @@ void value_t_delete(struct value_t*);
 void value_t_display(struct value_t*);
 
 struct value_t* value_t_add(struct value_t*, struct value_t* );
+struct value_t* value_t_mod(struct value_t*, struct value_t* );
 struct value_t* value_t_sub(struct value_t*, struct value_t* );
 struct value_t* value_t_mul(struct value_t*, struct value_t* );
 struct value_t* value_t_div(struct value_t*, struct value_t* );

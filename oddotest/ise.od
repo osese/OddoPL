@@ -9,4 +9,6 @@ ise b < a yap
 son 
 
 yazdir(a)
+yazdir('\n')
 yazdir(b)
+yazdir('\n')

@@ -3,7 +3,38 @@
 #include <stdlib.h>
 #include <string.h>	 // strcmp , memcpy
 
+#define rmvquotes(str, n) \
+	str[n-1] = '\0';\
+	++str;
 
+
+static char* makestr(char* str){
+	
+	int i = 1;
+	int j = 0;
+	int n = strlen(str);
+	str[n-1] = '\0';
+	char* res = (char*)malloc(n-1);
+
+	while(str[i] != '\0'){
+		if(str[i] == '\\'){
+			i = i + 1;
+			if(str[i] == 'n'){
+				*(res+j) = '\n';
+			}else if(str[i] == 't'){
+				*(res+j) = '\t';
+			}else if(str[i] == '\\'){
+				*(res+j) = '\\';
+			}
+		}else{
+			*(res+j) = str[i];
+		}
+		j += 1;
+		i += 1;
+	}
+	*(res+j) = '\0';
+	return res;
+}
 
 struct value_t* value_t_alloc(){
 	struct value_t* v = (struct value_t*)malloc(sizeof(struct value_t));
@@ -36,11 +67,14 @@ struct value_t* value_t_create_double(double val){
 }
 
 struct value_t* value_t_create_str(char* val){
+	
 	struct value_t* v = value_t_alloc();
 	v->type = V_STR;
-	v->sval = strdup(val);
+	v->sval = makestr(val);
+	
 	return v;
 }
+
 
 struct value_t*
 value_t_create(int type, char* value){
@@ -116,23 +150,23 @@ value_t_display(struct value_t* val){
 		fprintf(stderr, "value is NULL: value_t_display()\n");
 		return ;
 	}
-	printf(">> ");
+	
 	switch(val->type){
 		case V_DOUBLE:
-			printf("%f\n", val->dval);
+			printf("%f", val->dval);
 			break;
 		case V_STR:
-			printf("%s\n", val->sval);
+			printf("%s", val->sval);
 			break;
 		case V_BOOL:
 			if(val->ival){
-				printf("doğru\n");
+				printf("doğru");
 			}else{
-				printf("yanlış\n");
+				printf("yanlış");
 			}
 			break;
 		case V_INT:
-			printf("%d\n", val->ival);
+			printf("%d", val->ival);
 			break;
 		default:
 			fprintf(stderr, "Unrecognized variable type!");
@@ -177,6 +211,17 @@ value_t_sub(struct value_t* v1, struct value_t* v2){
 	}else if(v_isdouble(v1) && v_isdouble(v2)){
 		double t = (v1->dval - v2->dval);
 		temp = value_t_create_double(t);
+	}else{
+		fprintf(stderr, "'-' operatörü için yanlış tip.\n");
+	}
+	return temp;
+}
+struct value_t* value_t_mod(struct value_t* v1, struct value_t* v2){
+	struct value_t* temp = NULL;
+
+	if(v_isint(v1) && v_isint(v2)){
+		int t = (v1->ival % v2->ival);
+		temp = value_t_create_int(t);
 	}else{
 		fprintf(stderr, "'-' operatörü için yanlış tip.\n");
 	}

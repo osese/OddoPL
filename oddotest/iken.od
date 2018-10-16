@@ -3,6 +3,7 @@ b = 6
 
 iken a < b yap 
     yazdir(a)
+    yazdir(' ')
     a = a + 1
 son 
 

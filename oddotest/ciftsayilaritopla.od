@@ -1,0 +1,12 @@
+a = 0
+t = 10
+b = 0
+
+iken a < t yap 
+    ise a % 2 == 0 yap
+        b = b + a 
+    son 
+    a = a + 1
+son 
+
+yazdir(b)

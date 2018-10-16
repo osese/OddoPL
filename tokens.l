@@ -40,8 +40,8 @@ yanlış									    { yylval = value_t_create(V_BOOL, "0"); return YANLIS; }
 {H}({H}|{R})*								{ yylval = value_t_create(V_IDENT, yytext); return TANIMLAYICI; }
 {R}+										{ yylval = value_t_create(V_INT, yytext); return TAMSAYI; }
 {R}*\.{R}+									{ yylval = value_t_create(V_DOUBLE, yytext); return ONDALIK;	}
-'(\\.|[^\\'])+'								{ yylval = value_t_create(V_STR, yytext); return DIZGI; }
-\"(\\.|[^\\"])*\"							{ yylval = value_t_create(V_STR, yytext); return DIZGI;	}
+'(\\.|[^\\'])+'								{ yylval = value_t_create_str(yytext); return DIZGI; }
+\"(\\.|[^\\"])*\"							{ yylval = value_t_create_str(yytext); return DIZGI;	}
 "+="										{ return ARTIESIT; }
 "-="										{ return EKSIESIT; }
 "*="										{ return CARPIESIT; }
@@ -56,8 +56,8 @@ yanlış									    { yylval = value_t_create(V_BOOL, "0"); return YANLIS; }
 "<="										{ return KE; }
 "=="										{ return EE; }
 "!="										{ return ED; }
-
-[ \t\v\f]									{ /* g�zard� et */ }
+YS                                          { return YS; }
+[ \t\v\f]									{ /* gözardı et */ }
 
 \n											{ lineno++; }
 .											{ return yytext[0]; }
