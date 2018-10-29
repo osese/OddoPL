@@ -1,6 +1,6 @@
 #ifndef OBJECT_INCLUDE
 #define OBJECT_INCLUDE
-
+#include "vstr.h"
 
 #define NONE value_t_create_none()
 enum{
@@ -20,7 +20,8 @@ struct value_t{
 	int type;
 	int pos;
 	union{
-		char* sval;		// string value
+		vstr_t str;		// string value
+		char* ident;
 		double dval;	// double value
 		long ival; 		// integer value
 		struct { int l1; int l2; } label;
@@ -34,11 +35,12 @@ struct value_t* value_t_create(int type, char* value);
 struct value_t* value_t_create_none();
 struct value_t* value_t_create_int(long val);
 struct value_t* value_t_create_double(double val);
-struct value_t* value_t_create_str(char* val);
+struct value_t* value_t_create_vstr(vstr_t vstr);
+struct value_t* value_t_create_vstr_c(char* val);
 
 struct value_t* value_t_copy(struct value_t*);
 
-void value_t_delete(struct value_t*);
+void value_t_free(struct value_t*);
 
 void value_t_display(struct value_t*);
 
@@ -70,9 +72,9 @@ struct value_t* value_t_ne(struct value_t*, struct value_t*);
 #define v_isident(t1) 				(t1->type == V_IDENT)
 #define v_gint(t1) 		(t1->ival)
 #define v_gdouble(t1)	(t1->dval)
-#define v_gstr(t1)		(t1->sval)
-#define v_gident(t1)    (t1->sval)
-#define v_gtype(t1) 	(t1->sval)
+#define v_gvstr(t1)		(t1->str)
+#define v_gident(t1)    (t1->ident)
+#define v_gtype(t1) 	(t1->ident)
 #define v_glabel(t1)    (t1->label)
 #define v_glabel(t1)    (t1->label)
 

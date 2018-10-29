@@ -1,4 +1,4 @@
-#include "./include/hash.h"
+#include "hash.h"
 #include <string.h>
 
 unsigned HashSBox(const char*, int);

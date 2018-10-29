@@ -1,14 +1,27 @@
-echo "************* ODDO TEST **************"
+echo "************* TEST **************"
 
-echo "iken.od"
-./a.exe oddotest/iken.od
-echo ;
-echo ;
-echo "ise.od"
-./a.exe oddotest/ise.od
-echo ;
-echo "ikeniniken.od"
-./a.exe oddotest/ikeniniken.od
-echo ;
-echo "calc.od"
-./a.exe oddotest/calc.od
+echo "testsymboltable"
+  make testsymboltable
+  ./testsymboltable.exe
+
+echo "testhash"
+  make testhash
+  ./testhash.exe
+
+echo "testhashtable"
+  make testhashtable
+  ./testhashtable.exe
+
+echo "testvalue"
+  make testvalue
+  ./testvalue.exe
+
+echo "testvstr"
+  make testvstr
+  ./testvstr.exe
+
+echo "testvstr_per"
+  make testvstr_per
+  ./testvstr.exe 
+
+make clean 

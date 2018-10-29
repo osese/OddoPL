@@ -5,11 +5,17 @@ H		[a-zA-Z]
 
 #include <stdio.h>
 #include "rules.tab.h"
-#include "include/object.h"
+#include "object.h"
+
+
+
+
+
 extern Value_t yylval;
 
 int yywrap();
 int lineno  = 1;
+char* escape(char* str);
 
 %}
 
@@ -40,8 +46,8 @@ yanlış									    { yylval = value_t_create(V_BOOL, "0"); return YANLIS; }
 {H}({H}|{R})*								{ yylval = value_t_create(V_IDENT, yytext); return TANIMLAYICI; }
 {R}+										{ yylval = value_t_create(V_INT, yytext); return TAMSAYI; }
 {R}*\.{R}+									{ yylval = value_t_create(V_DOUBLE, yytext); return ONDALIK;	}
-'(\\.|[^\\'])+'								{ yylval = value_t_create_str(yytext); return DIZGI; }
-\"(\\.|[^\\"])*\"							{ yylval = value_t_create_str(yytext); return DIZGI;	}
+'(\\.|[^\\'])+'								{ yylval = value_t_create(V_STR, escape(yytext)); return DIZGI; }
+\"(\\.|[^\\"])*\"							{ yylval = value_t_create(V_STR, escape(yytext)); return DIZGI;	}
 "+="										{ return ARTIESIT; }
 "-="										{ return EKSIESIT; }
 "*="										{ return CARPIESIT; }
@@ -56,7 +62,6 @@ yanlış									    { yylval = value_t_create(V_BOOL, "0"); return YANLIS; }
 "<="										{ return KE; }
 "=="										{ return EE; }
 "!="										{ return ED; }
-YS                                          { return YS; }
 [ \t\v\f]									{ /* gözardı et */ }
 
 \n											{ lineno++; }
@@ -67,4 +72,32 @@ YS                                          { return YS; }
 
 int yywrap(){
 return 1;
+}
+
+char* escape(char* str){
+	
+	int i = 1;
+	int j = 0;
+	int n = strlen(str);
+	str[n-1] = '\0';
+	char* res = (char*)malloc(n-1);
+    
+	while(str[i] != '\0'){
+		if(str[i] == '\\'){
+			i = i + 1;
+			if(str[i] == 'n'){
+				*(res+j) = '\n';
+			}else if(str[i] == 't'){
+				*(res+j) = '\t';
+			}else if(str[i] == '\\'){
+				*(res+j) = '\\';
+			}
+		}else{
+			*(res+j) = str[i];
+		}
+		j += 1;
+		i += 1;
+	}
+	*(res+j) = '\0';
+	return res;
 }

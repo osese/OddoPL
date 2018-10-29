@@ -1,0 +1,7 @@
+yerel s = "ömer servet şeker";
+
+yerel i = 0;
+iken i < 15 yap 
+    yazdir(s[i]);
+    i = i + 1
+son

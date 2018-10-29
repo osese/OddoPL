@@ -32,7 +32,9 @@ enum opcode{
 	op_LOAD,
 	op_STORE,
 	op_GOTO,
-
+	op_ACCESS,
+	op_FUNC_STORE,
+	
 };
 
 struct instruction{

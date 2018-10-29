@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include "../include/hash.h"
+#include "hash.h"
 
 char* arr[] = {
   "HTML5",

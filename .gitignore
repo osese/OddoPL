@@ -2,3 +2,7 @@
 *.tab.h
 *.tab.c
 *.yy.c
+.vscode
+*~$
+*.exe
+*.o

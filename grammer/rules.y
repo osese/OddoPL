@@ -1,10 +1,10 @@
 %{
 
 #include<stdio.h>
-#include "include/codegen.h"
-#include "include/symboltable.h"
-#include "include/stackmachine.h"
-#include "include/object.h"
+#include "codegen.h"
+#include "symboltable.h"
+#include "stackmachine.h"
+#include "object.h"
 
 
 int yyerror(char*);
@@ -86,12 +86,13 @@ atom
 					| YANLIS			{ gencode(op_PUSH, $1, 0); }
 					| fonk_cagri
 					| solsal_ifade		{ gencode(op_LOAD, $1, 0); }
+					| solsal_ifade '[' ifade ']'	{gencode(op_ACCESS, $1, 0);}
+
 					;
 
 solsal_ifade
 					: TANIMLAYICI					{ $$ = $1; }	
 					| YEREL TANIMLAYICI 			{ $$ = $2; }	
-					| solsal_ifade '[' ifade ']'
 					| solsal_ifade '.' TANIMLAYICI
 					;
 
@@ -150,9 +151,13 @@ ilk_arg_list
 					| TANIMLAYICI '=' ifade ',' ilk_arg_list
 					;
 
+id_list: 
+					| TANIMLAYICI
+					| TANIMLAYICI ',' id_list
+					;
 
 fonk_tanimi
-					: YORDAM TANIMLAYICI '(' arg_list ')' blok SON
+					: YORDAM TANIMLAYICI '(' id_list ')' blok SON  
 					;
 
 sinif_tanimi

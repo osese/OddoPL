@@ -10,3 +10,4 @@ iken a < t yap
 son 
 
 yazdir(b)
+yazdir('\n')

@@ -1,7 +1,7 @@
-#include "include/stackmachine.h"
-#include "include/codegen.h"
-#include "include/object.h"
-#include "include/symboltable.h"
+#include "stackmachine.h"
+#include "codegen.h"
+#include "object.h"
+#include "symboltable.h"
 #include <assert.h>
 #define DEBUG
 
@@ -112,13 +112,13 @@ int fetch_execute_cycle(){
 	Ins a ;
 	Value_t v1;
 	Value_t v2;
+	initScope();
 	do{
 		a = code[pc];
 		switch(a.op){
 			case op_LOAD:
 				;
-				
-				stack[++top] = sym_get(v_gstr(a.ar1));
+				stack[++top] = sym_get(v_gident(a.ar1));
 				break;
 			case op_STORE:
 				;
@@ -191,6 +191,16 @@ int fetch_execute_cycle(){
 				v1 = stack[top-1];
 				v2 = stack[top];
 				stack[--top] = value_t_g(v1, v2);
+				break;
+			case op_ACCESS:
+				v1 = sym_get(v_gident(a.ar1));
+				v2 = stack[top];
+				if(v_isstr(v1)){
+					stack[top] = value_t_create_vstr(v_str_at(v_gvstr(v1), v_gint(v2)));
+				}else{
+					// error 
+					top--;
+				}
 				break;
 			default: 
 				assert("Hey wtf!! ");

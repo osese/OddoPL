@@ -1,4 +1,4 @@
-#include "./include/codegen.h"
+#include "codegen.h"
 
 
 void gencode(enum opcode op, Value_t ar1, Value_t ar2){

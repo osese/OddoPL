@@ -1,0 +1,5 @@
+yerel a = "omer servet";
+yerel b = "şeker";
+
+yazdir(a + b);
+yazdir(a[0]);

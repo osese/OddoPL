@@ -10,5 +10,6 @@ son
 
 yazdir(a)
 yazdir('\n')
+yazdir('\t')
 yazdir(b)
 yazdir('\n')

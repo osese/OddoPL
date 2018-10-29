@@ -1,0 +1,11 @@
+yerel a = 1.234;
+yerel b = 1.412;
+yerel c = 12;
+
+yazdir(a + b);
+yazdir('\n');
+
+yazdir(a + b + c);
+
+yazdir('\n');
+yazdir(a - b);
