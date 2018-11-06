@@ -3,61 +3,61 @@
 #include <stdlib.h>
 #include <string.h> // strcmp , memcpy
 
-struct value_t *value_t_alloc() {
-  struct value_t *v = (struct value_t *)malloc(sizeof(struct value_t));
+struct _value *value_alloc() {
+  struct _value *v = (struct _value *)malloc(sizeof(struct _value));
   if (!v) {
-    fprintf(stderr, "Malloc error: value_t_create()!\n");
+    fprintf(stderr, "Malloc error: value_create()!\n");
     return NULL;
   }
   return v;
 }
 
-struct value_t *value_t_create_none() {
-  struct value_t *t = value_t_alloc();
+struct _value *value_create_none() {
+  struct _value *t = value_alloc();
   t->type = V_NONE;
   t->ival = 0;
   return t;
 }
 
-struct value_t *value_t_create_int(long val) {
-  struct value_t *v = value_t_alloc();
+struct _value *value_create_int(long val) {
+  struct _value *v = value_alloc();
   v->type = V_INT;
   v->ival = val;
   return v;
 }
 
-struct value_t *value_t_create_double(double val) {
-  struct value_t *v = value_t_alloc();
+struct _value *value_create_double(double val) {
+  struct _value *v = value_alloc();
   v->type = V_DOUBLE;
   v->dval = val;
   return v;
 }
 
-struct value_t *value_t_create_vstr_c(char *val) {
-  struct value_t *v = value_t_alloc();
+struct _value *value_create_vstr_c(char *val) {
+  struct _value *v = value_alloc();
   v->type = V_STR;
   v->str = v_str_create_from(val);
   return v;
 }
 
-struct value_t *value_t_create_vstr(vstr_t vstr) {
-  struct value_t *v = value_t_alloc();
+struct _value *value_create_vstr(vstr_t vstr) {
+  struct _value *v = value_alloc();
   v->type = V_STR;
   v->str = vstr;
   return v;
 }
 
-struct value_t *value_t_create(int type, char *value) {
+struct _value *value_create(int type, char *value) {
   if (!value) {
-    fprintf(stderr, "value is NULL: value_t_create()\n");
+    fprintf(stderr, "value is NULL: value_create()\n");
     return NULL;
   }
-  struct value_t *v = (struct value_t *)malloc(sizeof(struct value_t));
+  struct _value *v = (struct _value *)malloc(sizeof(struct _value));
   v->type = type;
   v->pos = -1;
 
   if (!v) {
-    fprintf(stderr, "Malloc error: value_t_create()!\n");
+    fprintf(stderr, "Malloc error: value_create()!\n");
     return NULL;
   }
 
@@ -89,7 +89,7 @@ struct value_t *value_t_create(int type, char *value) {
   return v;
 };
 
-void value_t_free(struct value_t* v1) {
+void _value_free(struct _value* v1) {
   if (v1) {
     if(v1->type == V_STR){
       v_str_free(v1->str);
@@ -103,27 +103,27 @@ void value_t_free(struct value_t* v1) {
   }
 }
 
-struct value_t *value_t_copy(struct value_t *v1) {
+struct _value *_value_copy(struct _value *v1) {
   if (!v1) {
-    fprintf(stderr, "Source is null: value_t_copy()");
+    fprintf(stderr, "Source is null: _value_copy()");
     return NULL;
   }
 
-  struct value_t *val = NULL;
-  val = value_t_alloc();
+  struct _value *val = NULL;
+  val = value_alloc();
 
-  memcpy((void *)val, (void *)v1, sizeof(struct value_t));
+  memcpy((void *)val, (void *)v1, sizeof(struct _value));
 
   if (val->type == V_STR) {
     val->str = v_str_copy(v1->str);
   }
 
-  return (struct value_t *)val;
+  return (struct _value *)val;
 }
 
-void value_t_display(struct value_t *val) {
+void value_display(struct _value *val) {
   if (!val) {
-    fprintf(stderr, "value is NULL: value_t_display()\n");
+    fprintf(stderr, "value is NULL: value_display()\n");
     return;
   }
 
@@ -150,22 +150,22 @@ void value_t_display(struct value_t *val) {
   }
 }
 
-struct value_t *value_t_add(struct value_t *v1, struct value_t *v2) {
-  struct value_t *temp = NULL;
+struct _value *value_add(struct _value *v1, struct _value *v2) {
+  struct _value *temp = NULL;
 
   if (v_isint(v1) && v_isint(v2)) {
-    temp = value_t_create_int((v1->ival + v2->ival));
+    temp = value_create_int((v1->ival + v2->ival));
   } else if (v_isint(v1) && v_isdouble(v2)) {
     double t = (v2->dval + v1->ival);
-    temp = value_t_create_double(t);
+    temp = value_create_double(t);
   } else if (v_isdouble(v1) && v_isint(v2)) {
     double t = (v1->dval + v2->ival);
-    temp = value_t_create_double(t);
+    temp = value_create_double(t);
   } else if (v_isdouble(v1) && v_isdouble(v2)) {
     double t = (v1->dval + v2->dval);
-    temp = value_t_create_double(t);
+    temp = value_create_double(t);
   } else if (v_isstr(v1) && v_isstr(v2)) {
-    temp = value_t_create_vstr(v_str_add(v1->str, v2->str));
+    temp = value_create_vstr(v_str_add(v1->str, v2->str));
   } else {
     fprintf(stderr, "'+' operatör için yanlış tip.\n");
   }
@@ -173,61 +173,61 @@ struct value_t *value_t_add(struct value_t *v1, struct value_t *v2) {
   return temp;
 }
 
-struct value_t *value_t_sub(struct value_t *v1, struct value_t *v2) {
-  struct value_t *temp = NULL;
+struct _value *value_sub(struct _value *v1, struct _value *v2) {
+  struct _value *temp = NULL;
 
   if (v_isint(v1) && v_isint(v2)) {
     int t = (v1->ival - v2->ival);
-    temp = value_t_create_int(t);
+    temp = value_create_int(t);
   } else if (v_isint(v1) && v_isdouble(v2)) {
     double t = ((double)v1->ival - v2->dval);
-    temp = value_t_create_double(t);
+    temp = value_create_double(t);
   } else if (v_isdouble(v1) && v_isint(v2)) {
     double t = (v1->dval - v2->ival);
-    temp = value_t_create_double(t);
+    temp = value_create_double(t);
   } else if (v_isdouble(v1) && v_isdouble(v2)) {
     double t = (v1->dval - v2->dval);
-    temp = value_t_create_double(t);
+    temp = value_create_double(t);
   } else {
     fprintf(stderr, "'-' operatörü için yanlış tip.\n");
   }
   return temp;
 }
-struct value_t *value_t_mod(struct value_t *v1, struct value_t *v2) {
-  struct value_t *temp = NULL;
+struct _value *value_mod(struct _value *v1, struct _value *v2) {
+  struct _value *temp = NULL;
 
   if (v_isint(v1) && v_isint(v2)) {
     int t = (v1->ival % v2->ival);
-    temp = value_t_create_int(t);
+    temp = value_create_int(t);
   } else {
     fprintf(stderr, "'-' operatörü için yanlış tip.\n");
   }
   return temp;
 }
 
-struct value_t *value_t_mul(struct value_t *v1, struct value_t *v2) {
-  struct value_t *temp = NULL;
+struct _value *value_mul(struct _value *v1, struct _value *v2) {
+  struct _value *temp = NULL;
 
   if (v_isint(v1) && v_isint(v2)) {
     int t = (v1->ival * v2->ival);
-    temp = value_t_create(V_INT, (void *)&t);
+    temp = value_create(V_INT, (void *)&t);
   } else if (v_isint(v1) && v_isdouble(v2)) {
     double t = ((double)v1->ival * v2->dval);
-    temp = value_t_create(V_DOUBLE, (void *)&t);
+    temp = value_create(V_DOUBLE, (void *)&t);
   } else if (v_isdouble(v1) && v_isint(v2)) {
     double t = (v1->dval * v2->ival);
-    temp = value_t_create(V_DOUBLE, (void *)&t);
+    temp = value_create(V_DOUBLE, (void *)&t);
   } else if (v_isdouble(v1) && v_isdouble(v2)) {
     double t = (v1->dval * v2->dval);
-    temp = value_t_create(V_DOUBLE, (void *)&t);
+    temp = value_create(V_DOUBLE, (void *)&t);
   } else {
     fprintf(stderr, "'*' operatör için yanlış tip.\n");
   }
   return temp;
 }
 
-struct value_t *value_t_div(struct value_t *v1, struct value_t *v2) {
-  struct value_t *temp = NULL;
+struct _value *value_div(struct _value *v1, struct _value *v2) {
+  struct _value *temp = NULL;
   if (v_isnumeric(v2)) {
     if (v2->ival == 0 || v2->dval == 0) {
       fprintf(stderr, "Sıfıra bölme hatası.");
@@ -236,16 +236,16 @@ struct value_t *value_t_div(struct value_t *v1, struct value_t *v2) {
   }
   if (v_isint(v1) && v_isint(v2)) {
     double t = ((double)v1->ival / (double)v2->ival);
-    temp = value_t_create(V_INT, (void *)&t);
+    temp = value_create(V_INT, (void *)&t);
   } else if (v_isint(v1) && v_isdouble(v2)) {
     double t = ((double)v1->ival / v2->dval);
-    temp = value_t_create(V_DOUBLE, (void *)&t);
+    temp = value_create(V_DOUBLE, (void *)&t);
   } else if (v_isdouble(v1) && v_isint(v2)) {
     double t = (v1->dval / v2->ival);
-    temp = value_t_create(V_DOUBLE, (void *)&t);
+    temp = value_create(V_DOUBLE, (void *)&t);
   } else if (v_isdouble(v1) && v_isdouble(v2)) {
     double t = (v1->dval / v2->dval);
-    temp = value_t_create(V_DOUBLE, (void *)&t);
+    temp = value_create(V_DOUBLE, (void *)&t);
   } else {
     fprintf(stderr, "'+' operatörü için yanlış tip.\n");
   }
@@ -253,21 +253,21 @@ struct value_t *value_t_div(struct value_t *v1, struct value_t *v2) {
   return temp;
 }
 
-struct value_t *value_t_uminus(struct value_t *v1) {
-  struct value_t *temp = NULL;
+struct _value *value_uminus(struct _value *v1) {
+  struct _value *temp = NULL;
   if (v_isint(v1)) { // int ve bool
     int k = -(v1->ival);
-    temp = value_t_create(V_INT, (void *)&k);
+    temp = value_create(V_INT, (void *)&k);
   } else if (v_isdouble(v1)) {
     double k = -(v1->dval);
-    temp = value_t_create(V_DOUBLE, (void *)&k);
+    temp = value_create(V_DOUBLE, (void *)&k);
   } else {
     fprintf(stderr, "'-' operatörü için yanlış tip.\n");
   }
   return temp;
 }
 
-int value_t_cmp(struct value_t *v1, struct value_t *v2) {
+int value_cmp(struct _value *v1, struct _value *v2) {
   if (v_iseq(v1, v2)) {
     if (v_isbool(v1)) {
       if (v1->ival == v2->ival)
@@ -297,7 +297,7 @@ int value_t_cmp(struct value_t *v1, struct value_t *v2) {
   return -2;
 }
 
-struct value_t *value_t_and(struct value_t *v1, struct value_t *v2) {
+struct _value *value_and(struct _value *v1, struct _value *v2) {
   if (v_isint(v1)) {
     if (v1->ival)
       return v2;
@@ -316,7 +316,7 @@ struct value_t *value_t_and(struct value_t *v1, struct value_t *v2) {
   }
 }
 
-struct value_t *value_t_or(struct value_t *v1, struct value_t *v2) {
+struct _value *value_or(struct _value *v1, struct _value *v2) {
   if (v_isint(v1)) {
     if (v1->ival)
       return v1;
@@ -335,9 +335,9 @@ struct value_t *value_t_or(struct value_t *v1, struct value_t *v2) {
   }
 }
 
-struct value_t *value_t_not(struct value_t *v1) {
+struct _value *value_not(struct _value *v1) {
   int d = 1;
-  struct value_t *val = NULL;
+  struct _value *val = NULL;
 
   if (v_isint(v1)) {
     if (v1->ival)
@@ -353,77 +353,77 @@ struct value_t *value_t_not(struct value_t *v1) {
       d = 0;
   }
 
-  val = value_t_create_int(d);
+  val = value_create_int(d);
   return val;
 }
 
-struct value_t *value_t_g(struct value_t *v1, struct value_t *v2) {
-  struct value_t *val = NULL;
-  int k = value_t_cmp(v1, v2);
+struct _value *value_g(struct _value *v1, struct _value *v2) {
+  struct _value *val = NULL;
+  int k = value_cmp(v1, v2);
   if (k == 1)
     k = 1;
   else
     k = 0;
 
-  val = value_t_create_int(k);
+  val = value_create_int(k);
   return val;
 }
 
-struct value_t *value_t_l(struct value_t *v1, struct value_t *v2) {
-  struct value_t *val = NULL;
-  int k = value_t_cmp(v1, v2);
+struct _value *value_lt(struct _value *v1, struct _value *v2) {
+  struct _value *val = NULL;
+  int k = value_cmp(v1, v2);
   if (k == 1 || k == 0)
     k = 0;
   else
     k = 1;
-  val = value_t_create_int(k);
+  val = value_create_int(k);
   return val;
 }
 
-struct value_t *value_t_le(struct value_t *v1, struct value_t *v2) {
-  struct value_t *val = NULL;
-  int k = value_t_cmp(v1, v2);
+struct _value *value_lte(struct _value *v1, struct _value *v2) {
+  struct _value *val = NULL;
+  int k = value_cmp(v1, v2);
   if (k == 1)
     k = 0;
   else
     k = 1;
 
-  val = value_t_create_int(k);
+  val = value_create_int(k);
   return val;
 }
 
-struct value_t *value_t_ge(struct value_t *v1, struct value_t *v2) {
-  struct value_t *val = NULL;
-  int k = value_t_cmp(v1, v2);
+struct _value *value_ge(struct _value *v1, struct _value *v2) {
+  struct _value *val = NULL;
+  int k = value_cmp(v1, v2);
   if (k != -1)
     k = 1;
   else
     k = 0;
 
-  val = value_t_create_int(k);
+  val = value_create_int(k);
   return val;
 }
 
-struct value_t *value_t_ee(struct value_t *v1, struct value_t *v2) {
-  struct value_t *val = NULL;
-  int k = value_t_cmp(v1, v2);
+struct _value *value_ee(struct _value *v1, struct _value *v2) {
+  struct _value *val = NULL;
+  int k = value_cmp(v1, v2);
   if (k == 0)
     k = 1;
   else
     k = 0;
 
-  val = value_t_create_int(k);
+  val = value_create_int(k);
   return val;
 }
 
-struct value_t *value_t_ne(struct value_t *v1, struct value_t *v2) {
-  struct value_t *val = NULL;
-  int k = value_t_cmp(v1, v2);
+struct _value *value_ne(struct _value *v1, struct _value *v2) {
+  struct _value *val = NULL;
+  int k = value_cmp(v1, v2);
   if (k != 0)
     k = 1;
   else
     k = 0;
 
-  val = value_t_create_int(k);
+  val = value_create_int(k);
   return val;
 }

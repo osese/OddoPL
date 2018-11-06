@@ -5,10 +5,10 @@
 
 
 // runtime stack
-Value_t stack[10000];
+value_t stack[10000];
 static int top = -1;
 
-void push_stack(Value_t var);
+void push_stack(value_t var);
 int print_eval_loop();
 
 int fetch_execute_cycle();

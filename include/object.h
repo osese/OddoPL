@@ -2,7 +2,7 @@
 #define OBJECT_INCLUDE
 #include "vstr.h"
 
-#define NONE value_t_create_none()
+#define NONE value_create_none()
 enum{
 	V_IDENT = 0,
 	V_INT,
@@ -16,7 +16,7 @@ enum{
 	V_NONE
 };
 
-struct value_t{
+struct _value{
 	int type;
 	int pos;
 	union{
@@ -30,37 +30,37 @@ struct value_t{
 };
 
 
-struct value_t* value_t_alloc();
-struct value_t* value_t_create(int type, char* value);
-struct value_t* value_t_create_none();
-struct value_t* value_t_create_int(long val);
-struct value_t* value_t_create_double(double val);
-struct value_t* value_t_create_vstr(vstr_t vstr);
-struct value_t* value_t_create_vstr_c(char* val);
+struct _value* value_alloc();
+struct _value* value_create(int type, char* value);
+struct _value* value_create_none();
+struct _value* value_create_int(long val);
+struct _value* value_create_double(double val);
+struct _value* value_create_vstr(vstr_t vstr);
+struct _value* value_create_vstr_c(char* val);
 
-struct value_t* value_t_copy(struct value_t*);
+struct _value* _value_copy(struct _value*);
 
-void value_t_free(struct value_t*);
+void _value_free(struct _value*);
 
-void value_t_display(struct value_t*);
+void value_display(struct _value*);
 
-struct value_t* value_t_add(struct value_t*, struct value_t* );
-struct value_t* value_t_mod(struct value_t*, struct value_t* );
-struct value_t* value_t_sub(struct value_t*, struct value_t* );
-struct value_t* value_t_mul(struct value_t*, struct value_t* );
-struct value_t* value_t_div(struct value_t*, struct value_t* );
-struct value_t* value_t_uminus(struct value_t*);
+struct _value* value_add(struct _value*, struct _value* );
+struct _value* value_mod(struct _value*, struct _value* );
+struct _value* value_sub(struct _value*, struct _value* );
+struct _value* value_mul(struct _value*, struct _value* );
+struct _value* value_div(struct _value*, struct _value* );
+struct _value* value_uminus(struct _value*);
 
-int value_t_cmp(struct value_t*, struct value_t*);
-struct value_t* value_t_and(struct value_t*, struct value_t*);
-struct value_t* value_t_or(struct value_t*, struct value_t*);
-struct value_t* value_t_not(struct value_t*);
-struct value_t* value_t_g(struct value_t*, struct value_t*);
-struct value_t* value_t_l(struct value_t*, struct value_t*);
-struct value_t* value_t_le(struct value_t*, struct value_t*);
-struct value_t* value_t_ge(struct value_t*, struct value_t*);
-struct value_t* value_t_ee(struct value_t*, struct value_t*);
-struct value_t* value_t_ne(struct value_t*, struct value_t*);
+int value_cmp(struct _value*, struct _value*);
+struct _value* value_and(struct _value*, struct _value*);
+struct _value* value_or(struct _value*, struct _value*);
+struct _value* value_not(struct _value*);
+struct _value* value_g(struct _value*, struct _value*);
+struct _value* value_lt(struct _value*, struct _value*);
+struct _value* value_le(struct _value*, struct _value*);
+struct _value* value_ge(struct _value*, struct _value*);
+struct _value* value_ee(struct _value*, struct _value*);
+struct _value* value_ne(struct _value*, struct _value*);
 
 
 #define v_iseq(t1, t2) 				(t1->type == t2->type)
@@ -78,5 +78,5 @@ struct value_t* value_t_ne(struct value_t*, struct value_t*);
 #define v_glabel(t1)    (t1->label)
 #define v_glabel(t1)    (t1->label)
 
-typedef struct value_t* Value_t;
+typedef struct _value* value_t;
 #endif

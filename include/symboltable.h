@@ -23,6 +23,6 @@ struct scope_list* freeScope();
 struct scope_list* initScope();
 
 typedef struct scope_list* Scope_t; 
-void sym_put(char* name, Value_t val);
-Value_t sym_get(char* name);
+void sym_put(char* name, value_t val);
+value_t sym_get(char* name);
 #endif

@@ -1,12 +1,12 @@
 #include "symboltable.h"
 
 
-void sym_put(char* name, Value_t val){
+void sym_put(char* name, value_t val){
 	 table_insert(TCurrent->table, name, val);
 }
 
-int sym_update(char* name, Value_t val){
-	Value_t k = table_lookup(TCurrent->table, name);
+int sym_update(char* name, value_t val){
+	value_t k = table_lookup(TCurrent->table, name);
 	if(k){ // todo why free
 		free(k);
 		table_insert(TCurrent->table, name, val);
@@ -15,9 +15,9 @@ int sym_update(char* name, Value_t val){
 	return 0;
 }
 
-Value_t sym_get(char* name){
+value_t sym_get(char* name){
 	
-	Value_t k = table_lookup(TCurrent->table, name);
+	value_t k = table_lookup(TCurrent->table, name);
 	if(k == NULL){
 		Scope_t parent = TCurrent->parent;
 		while(parent && !k){

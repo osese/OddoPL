@@ -11,7 +11,7 @@ H		[a-zA-Z]
 
 
 
-extern Value_t yylval;
+extern value_t yylval;
 
 int yywrap();
 int lineno  = 1;
@@ -41,13 +41,13 @@ sinif										{ return SINIF;	}
 tür											{ return TUR; 	}
 cins 										{ return CINS; 	}
 yazdir										{ return YAZDIR; }
-doğru										{ yylval = value_t_create(V_BOOL, "1"); return DOGRU; }
-yanlış									    { yylval = value_t_create(V_BOOL, "0"); return YANLIS; }
-{H}({H}|{R})*								{ yylval = value_t_create(V_IDENT, yytext); return TANIMLAYICI; }
-{R}+										{ yylval = value_t_create(V_INT, yytext); return TAMSAYI; }
-{R}*\.{R}+									{ yylval = value_t_create(V_DOUBLE, yytext); return ONDALIK;	}
-'(\\.|[^\\'])+'								{ yylval = value_t_create(V_STR, escape(yytext)); return DIZGI; }
-\"(\\.|[^\\"])*\"							{ yylval = value_t_create(V_STR, escape(yytext)); return DIZGI;	}
+doğru										{ yylval = value_create(V_BOOL, "1"); return DOGRU; }
+yanlış									    { yylval = value_create(V_BOOL, "0"); return YANLIS; }
+{H}({H}|{R})*								{ yylval = value_create(V_IDENT, yytext); return TANIMLAYICI; }
+{R}+										{ yylval = value_create(V_INT, yytext); return TAMSAYI; }
+{R}*\.{R}+									{ yylval = value_create(V_DOUBLE, yytext); return ONDALIK;	}
+'(\\.|[^\\'])+'								{ yylval = value_create(V_STR, escape(yytext)); return DIZGI; }
+\"(\\.|[^\\"])*\"							{ yylval = value_create(V_STR, escape(yytext)); return DIZGI;	}
 "+="										{ return ARTIESIT; }
 "-="										{ return EKSIESIT; }
 "*="										{ return CARPIESIT; }

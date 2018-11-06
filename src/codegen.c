@@ -1,7 +1,7 @@
 #include "codegen.h"
 
 
-void gencode(enum opcode op, Value_t ar1, Value_t ar2){
+void gencode(enum opcode op, value_t ar1, value_t ar2){
 	code[pc].ar1 = ar1;
 	code[pc++].op = op;
 	// code[pc].op = op;

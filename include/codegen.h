@@ -39,7 +39,7 @@ enum opcode{
 
 struct instruction{
 	enum opcode op;
-	Value_t ar1;
+	value_t ar1;
 	int ar2;
 };
 
@@ -47,7 +47,7 @@ struct instruction{
 struct instruction code[100000];
 static int pc = 0;	 // program counter
 
-void gencode(enum opcode op, Value_t ar1, Value_t ar2);
+void gencode(enum opcode op, value_t ar1, value_t ar2);
 
 void genlabel();
 void patch(int codeindex, int loc);

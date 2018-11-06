@@ -12,7 +12,7 @@ extern void yyset_in(FILE* );
 int yylex();
 %}
 
-%define api.value.type { struct value_t* }
+%define api.value.type { struct _value* }
 
 %token TAMSAYI
 %token ONDALIK
@@ -128,12 +128,12 @@ ifade				: atom								{ $$ = $1; }
 
 
 secme_demeci
-					: ISE ifade { $1 = value_t_alloc(); $1->label.l1 = PC(); gencode(op_JMP, $1, 0); }
+					: ISE ifade { $1 = value_alloc(); $1->label.l1 = PC(); gencode(op_JMP, $1, 0); }
 						YAP blok SON  { patch($1->label.l1, PC()); }
 					;
 
 dongu_demeci
-					: IKEN	{$1 = value_t_alloc();  $1->label.l2 = PC();}  
+					: IKEN	{$1 = value_alloc();  $1->label.l2 = PC();}  
 					ifade YAP { $1->label.l1 = PC(); gencode(op_JMP, $1, 0);} 
 					blok SON { gencode(op_GOTO, $1, 0); patch($1->label.l1, PC()); }
 

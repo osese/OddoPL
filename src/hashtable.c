@@ -11,7 +11,7 @@
 extern int number_of_collisions;
 #endif
 
-struct list_node* create_list_node(const char* name, Value_t value) {
+struct list_node* create_list_node(const char* name, value_t value) {
   struct list_node* node = (struct list_node*)malloc(sizeof(struct list_node));
   if (!node) {
     fprintf(stderr, "Malloc failed");
@@ -23,7 +23,7 @@ struct list_node* create_list_node(const char* name, Value_t value) {
   return node;
 }
 
-void table_insert(struct list_node** table, const char* name, Value_t value) {
+void table_insert(struct list_node** table, const char* name, value_t value) {
   unsigned key = hash(name);
   if (table[key]) {
   #if DEBUG
@@ -49,7 +49,7 @@ void table_insert(struct list_node** table, const char* name, Value_t value) {
   table[key] = create_list_node(name, value);
 };
 
-Value_t table_lookup(struct list_node** table, const char* name) {
+value_t table_lookup(struct list_node** table, const char* name) {
   unsigned key = hash(name);
   struct list_node* node = table[key];
 
@@ -93,7 +93,7 @@ struct list_node* list_node_copy(struct list_node* node){
   if(node){
     newnode = (struct list_node*)malloc(sizeof(struct list_node));
     newnode->name = node->name;
-    newnode->value = value_t_copy(node->value);
+    newnode->value = _value_copy(node->value);
   }
   return newnode;
 }
@@ -120,10 +120,10 @@ struct list_node** table_copy(struct list_node** table, int size) {
 
 void list_node_free(struct list_node* node){
   if(node){
-    Value_t tv = node->value;
+    value_t tv = node->value;
     char* name = node->name;  
     list_node_free(node->next);
-    value_t_free(tv);
+    _value_free(tv);
     free(name);
   }
 }
