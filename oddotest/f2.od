@@ -1,0 +1,9 @@
+yordam topla(a, b)
+  yerel x = a + b
+  don x 
+son 
+
+
+t = topla(12, 32);
+
+yazdir(t);

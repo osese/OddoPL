@@ -33,14 +33,16 @@ enum opcode{
 	op_STORE,
 	op_GOTO,
 	op_ACCESS,
-	op_FUNC_STORE,
-	
+	op_FBEG,
+	op_FEND,
+	op_CALL,
+	op_RET,
 };
 
 struct instruction{
 	enum opcode op;
 	value_t ar1;
-	int ar2;
+	value_t ar2;
 };
 
 
@@ -53,7 +55,6 @@ void genlabel();
 void patch(int codeindex, int loc);
 
 int PC();
-
 typedef struct instruction Ins;
 
 #endif

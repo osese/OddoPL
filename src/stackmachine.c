@@ -202,6 +202,31 @@ int fetch_execute_cycle(){
 					top--;
 				}
 				break;
+			case op_FBEG:
+				v1 = a.ar1;
+				v2 = a.ar2;
+				sym_put(v_gident(v1), v2);
+				pc = v_gf(v2)->bit - 1;
+				break;
+			case op_FEND:
+				v1 = a.ar1;
+				pc = v_gf(v1)->ret;
+				freeScope();
+				break;
+			case op_RET:
+				v1 = a.ar1;		// ifade --şimdilik gerek yok ifadenin sonucu stackte 
+				v2 = a.ar2; 	// function 
+				pc = v_gf(v1)->ret;
+				freeScope();
+				break;
+			case op_CALL:
+				v1 = sym_get(v_gident(a.ar1));
+				if(v1){
+					v_gf(v1)->ret = pc;
+					pc = v_gf(v1)->bas-1;
+					createScope(); 
+				}
+				break;
 			default: 
 				assert("Hey wtf!! ");
 				break;

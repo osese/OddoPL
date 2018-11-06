@@ -3,12 +3,14 @@
 
 void test_first();
 void test_multiple_scopes();
+void test_same_var_diff_scope();
+
 int main(){
 
   initScope();
-  // test_first();
-  test_multiple_scopes();
-
+  //test_first();
+  //test_multiple_scopes();
+  test_same_var_diff_scope();
   return 0;
 }
 
@@ -39,6 +41,7 @@ void test_first(){
   assert(p4->type == t2->type);
   assert(p4->ival == t2->ival);
   
+
   sym_put("servet", t);
   value_t p5 = sym_get("servet");
 
@@ -50,7 +53,7 @@ void test_first(){
   p5 = sym_get("servet");
   assert(p5 == NULL);
 
-
+  
 }
 
 
@@ -88,5 +91,24 @@ void test_multiple_scopes(){
 
   assert(b->ival == br->ival);
   assert(b->type == br->type);
+
+}
+
+void test_same_var_diff_scope(){
+  value_t x = value_create_int(65);
+  sym_put("omer", x); // 2-aynı isimli bir değişken farklı scope 
+  
+  createScope();
+  value_t y = value_create_int(12314);
+  sym_put("omer", y);
+  value_t yy = sym_get("omer");
+  assert(yy->ival == y->ival);
+
+  freeScope();
+  
+  
+  value_t xx = sym_get("omer");
+  assert(xx->ival == x->ival); //  2-aynı isimli bir değişken scopedan çıktıktan sonra değerini koruyor mu ? 
+
 
 }

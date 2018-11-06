@@ -1,0 +1,7 @@
+
+yordam x(a)
+  don 15
+son 
+
+t = x(2)
+yazdir(t)

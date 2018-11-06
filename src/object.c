@@ -3,14 +3,7 @@
 #include <stdlib.h>
 #include <string.h> // strcmp , memcpy
 
-struct _value *value_alloc() {
-  struct _value *v = (struct _value *)malloc(sizeof(struct _value));
-  if (!v) {
-    fprintf(stderr, "Malloc error: value_create()!\n");
-    return NULL;
-  }
-  return v;
-}
+
 
 struct _value *value_create_none() {
   struct _value *t = value_alloc();
@@ -44,6 +37,20 @@ struct _value *value_create_vstr(vstr_t vstr) {
   struct _value *v = value_alloc();
   v->type = V_STR;
   v->str = vstr;
+  return v;
+}
+
+struct _value* value_create_f(vf_t f){
+  struct _value *v = value_alloc();
+  v->type = V_FUNC;
+  v->f = f; 
+  return v;
+}
+
+struct _value* value_create_vlist(vlist_t list){
+  struct _value *v = value_alloc();
+  v->type = V_LIST;
+  v->list = list; 
   return v;
 }
 
@@ -89,15 +96,15 @@ struct _value *value_create(int type, char *value) {
   return v;
 };
 
-void _value_free(struct _value* v1) {
+void value_free(struct _value *v1) {
   if (v1) {
-    if(v1->type == V_STR){
+    if (v1->type == V_STR) {
       v_str_free(v1->str);
       free(v1);
-    }else if(v1->type == V_IDENT){
+    } else if (v1->type == V_IDENT) {
       free(v1->ident);
       free(v1);
-    }else{
+    } else {
       free(v1);
     }
   }

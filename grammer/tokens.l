@@ -62,6 +62,7 @@ yanlış									    { yylval = value_create(V_BOOL, "0"); return YANLIS; }
 "<="										{ return KE; }
 "=="										{ return EE; }
 "!="										{ return ED; }
+"//".*									  { /* yorum */ }
 [ \t\v\f]									{ /* gözardı et */ }
 
 \n											{ lineno++; }

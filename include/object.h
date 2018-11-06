@@ -1,6 +1,11 @@
 #ifndef OBJECT_INCLUDE
 #define OBJECT_INCLUDE
+
+// @forward_dec
+typedef struct _value* value_t;
+
 #include "vstr.h"
+#include "vf.h"
 
 #define NONE value_create_none()
 enum{
@@ -13,6 +18,8 @@ enum{
 	V_BOOL,
 	V_LBL,
 	V_OTHER,
+	V_FUNC,
+	V_LIST,
 	V_NONE
 };
 
@@ -26,21 +33,31 @@ struct _value{
 		long ival; 		// integer value
 		struct { int l1; int l2; } label;
 		struct { int first; int second; } other;
+		vf_t f; 
+		vlist_t list;
 	};
 };
 
+#define value_alloc() (struct _value *)malloc(sizeof(struct _value))
 
-struct _value* value_alloc();
+
+// creation functions 
 struct _value* value_create(int type, char* value);
 struct _value* value_create_none();
 struct _value* value_create_int(long val);
 struct _value* value_create_double(double val);
 struct _value* value_create_vstr(vstr_t vstr);
 struct _value* value_create_vstr_c(char* val);
+struct _value* value_create_f(vf_t f);
+
+// vlist functions 
+struct _value* value_create_vlist(vlist_t list);
+#define value_push(X, value) vlist_push(X->list, value)
+#define value_pop(X) vlist_pop(X->list)
+#define value_get(X, index) vlist_get(X->list, index)
 
 struct _value* _value_copy(struct _value*);
-
-void _value_free(struct _value*);
+void value_free(struct _value*);
 
 void value_display(struct _value*);
 
@@ -77,6 +94,7 @@ struct _value* value_ne(struct _value*, struct _value*);
 #define v_gtype(t1) 	(t1->ident)
 #define v_glabel(t1)    (t1->label)
 #define v_glabel(t1)    (t1->label)
+#define v_gf(t1) (t1->f)
+#define v_gvlist(t1) (t1->list)
 
-typedef struct _value* value_t;
 #endif

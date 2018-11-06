@@ -123,7 +123,7 @@ void list_node_free(struct list_node* node){
     value_t tv = node->value;
     char* name = node->name;  
     list_node_free(node->next);
-    _value_free(tv);
+    value_free(tv);
     free(name);
   }
 }

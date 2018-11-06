@@ -1,0 +1,18 @@
+yordam cikart()
+	
+  yordam omeryazar(X) 
+    yazdir("omer");
+  son 
+
+  i = 0
+  iken i < 10 yap
+    omeryazar();
+    i = i + 1
+  son 
+
+  yazdir("süleyman");
+son
+
+omeryazar(); 
+
+cikart();

@@ -46,12 +46,9 @@ int yylex();
 program	:	blok	{gencode(op_HALT, 0, 0);}
 					;
 
-
-
-
 blok			: demec
 					| demec blok
-					| demec blok don_demec
+					| blok don_demec
 					;
 
 
@@ -69,13 +66,14 @@ demec			: ';'
 
 yazdir_demec: YAZDIR ifade { gencode(op_PRNT, 0, 0);}
 					;
+
 don_demec
-					: DON ifade
-					| DON ifade ';'
+					: DON ifade			{ $$ = value_create_int(PC()); gencode(op_RET, $2, 0);}
+					| DON ifade ';' { $$ = value_create_int(PC()); gencode(op_RET, $2, 0);}
 					;
 
 fonk_cagri
-					: TANIMLAYICI '(' arg_list ')'
+					: TANIMLAYICI '(' arg_list ')'	{ gencode(op_CALL, $1, $3); }
 					;
 
 atom
@@ -87,7 +85,6 @@ atom
 					| fonk_cagri
 					| solsal_ifade		{ gencode(op_LOAD, $1, 0); }
 					| solsal_ifade '[' ifade ']'	{gencode(op_ACCESS, $1, 0);}
-
 					;
 
 solsal_ifade
@@ -141,7 +138,7 @@ dongu_demeci
 					| YINELE blok EKADAR '(' ifade ')'
 					;
 
-arg_list			:
+arg_list	:
 					| atom
 					| atom ',' arg_list
 					;
@@ -152,12 +149,14 @@ ilk_arg_list
 					;
 
 id_list: 
-					| TANIMLAYICI
-					| TANIMLAYICI ',' id_list
+					| TANIMLAYICI									{ $$ = value_create_vlist(vlist_create()); value_push($$, $1); }
+					| TANIMLAYICI ',' id_list			{ $$ = $3; value_push($3, $1);}
 					;
 
 fonk_tanimi
-					: YORDAM TANIMLAYICI '(' id_list ')' blok SON  
+					: YORDAM TANIMLAYICI { $1 = value_create_f(vf_alloc()); gencode(op_FBEG, $2, $1);  } 
+					'(' id_list ')'  		 { v_gf($1)->params = v_gvlist($4); v_gf($1)->bas = PC();}
+					blok SON  					 { gencode(op_FEND, $1, 0); v_gf($1)->bit = PC(); }
 					;
 
 sinif_tanimi
@@ -193,6 +192,6 @@ int main(int argc, char* argv[]){
 
 
 int yyerror(char* chr){
-	fprintf(stderr, "Error occured: %s", chr);
+	fprintf(stderr, "Error occured: %s\n", chr);
 	return -1;
 }

@@ -46,5 +46,5 @@ testvstr:
 testvstr_per:
 	gcc -g -O3 ${libs} tests/test_vstr_perf.c -o test_vstr_perf
 
-testdal:
-	gcc -g ${libs} tests/test_dal.c ${src}/object.c  ${src}/vstr.c -o test_dal
+testvlist: 
+	gcc -g ${libs} tests/test_vlist.c ${src}/object.c ${src}/vstr.c ${src}/vlist.c -o test_vlist
